@@ -14,7 +14,7 @@ target/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-anime-service/.idea
+.idea
 *.iws
 *.iml
 *.ipr
