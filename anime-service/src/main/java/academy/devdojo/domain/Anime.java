@@ -1,22 +1,26 @@
 package academy.devdojo.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Builder
 @Data
+@AllArgsConstructor
 public class Anime {
     private Long id;
     private String name;
+    @Getter
+    private static List<Anime> animes = new ArrayList<>();
 
-    public static List<Anime> getAnimes() {
-        List<Anime> animeList = new ArrayList<>();
-        animeList.add(Anime.builder().id(1L).name("Dragon Ball").build());
-        animeList.add(Anime.builder().id(2L).name("Kimetsu no Yaiba").build());
-        animeList.add(Anime.builder().id(3L).name("Re:Zero").build());
-        return animeList;
+    static {
+        animes.add(Anime.builder().id(1L).name("Dragon Ball").build());
+        animes.add(Anime.builder().id(2L).name("Kimetsu no Yaiba").build());
+        animes.add(Anime.builder().id(3L).name("Re:Zero").build());
     }
+
 }
