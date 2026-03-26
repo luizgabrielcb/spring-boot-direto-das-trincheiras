@@ -3,7 +3,6 @@ package academy.devdojo.domain;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
 public class Anime {
     private Long id;
     private String name;
-    @Getter
     private static List<Anime> animes = new ArrayList<>();
 
     static {
@@ -23,4 +21,7 @@ public class Anime {
         animes.add(Anime.builder().id(3L).name("Re:Zero").build());
     }
 
+    public static List<Anime> getAnimes() {
+        return animes;
+    }
 }
