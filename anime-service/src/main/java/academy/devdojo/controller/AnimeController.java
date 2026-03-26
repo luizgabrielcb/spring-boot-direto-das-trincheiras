@@ -19,7 +19,7 @@ public class AnimeController {
     private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
 
     @GetMapping()
-    public ResponseEntity<List<AnimeGetResponse>> listAllAnimesParam(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
         var animes = Anime.getAnimes();
         var animeGetResponseList = MAPPER.toAnimeGetResponseList(animes);
 
@@ -33,7 +33,7 @@ public class AnimeController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<AnimeGetResponse> listAllAnimesPathVariable(@PathVariable Long id) {
+    public ResponseEntity<AnimeGetResponse> listAllPathVariable(@PathVariable Long id) {
         var response = Anime.getAnimes().stream()
                 .filter(anime -> anime.getId().equals(id))
                 .map(MAPPER::toAnimeGetResponse)

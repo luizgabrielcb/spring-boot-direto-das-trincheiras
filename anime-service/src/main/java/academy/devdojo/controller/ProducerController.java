@@ -20,18 +20,28 @@ public class ProducerController {
     private static final ProducerMapper MAPPER = ProducerMapper.INSTANCE;
 
     @GetMapping()
-    public List<Producer> listAllProducers() {
-        return Producer.getProducers();
-    }
+    public ResponseEntity<List<ProducerGetResponse>> listAll(@RequestParam(required = false) String name) {
+        var producers = Producer.getProducers();
+        var producerGetResponseList = MAPPER.toProducerGetResponseList(producers);
 
-    @GetMapping("filterParam")
-    public List<Producer> listAllProducersParam(@RequestParam String name) {
-        return Producer.getProducers().stream().filter(producer -> producer.getName().equalsIgnoreCase(name)).toList();
+        if (name == null) return ResponseEntity.ok(producerGetResponseList);
+
+        var response = producerGetResponseList.stream()
+                .filter(producer -> producer.getName().equalsIgnoreCase(name))
+                .toList();
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("{id}")
-    public Producer listAllProducersPathVariable(@PathVariable Long id) {
-        return Producer.getProducers().stream().filter(producer -> producer.getId().equals(id)).findFirst().orElse(null);
+    public ResponseEntity<ProducerGetResponse> listAllPathVariable(@PathVariable Long id) {
+        var response = Producer.getProducers().stream()
+                .filter(producer -> producer.getId().equals(id))
+                .map(MAPPER::toProducerGetResponse)
+                .findFirst()
+                .orElse(null);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
