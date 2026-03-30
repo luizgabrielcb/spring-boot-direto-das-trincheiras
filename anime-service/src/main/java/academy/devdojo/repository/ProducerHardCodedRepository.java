@@ -16,7 +16,7 @@ public class ProducerHardCodedRepository {
         var madhouse = Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();
         PRODUCERS.addAll(List.of(mappa, kyotoAnimation, madhouse));
     }
-    public static List<Producer> findAll() {
+    public List<Producer> findAll() {
         return PRODUCERS;
     }
 
