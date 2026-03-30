@@ -8,7 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 public class ProducerService {
-    private final ProducerHardCodedRepository repository;
+    private ProducerHardCodedRepository repository;
 
     public ProducerService() {
         this.repository = new ProducerHardCodedRepository();

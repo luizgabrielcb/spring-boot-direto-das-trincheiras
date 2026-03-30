@@ -16,12 +16,13 @@ public class ProducerHardCodedRepository {
         var madhouse = Producer.builder().id(3L).name("Madhouse").createdAt(LocalDateTime.now()).build();
         PRODUCERS.addAll(List.of(mappa, kyotoAnimation, madhouse));
     }
+
     public List<Producer> findAll() {
         return PRODUCERS;
     }
 
     public List<Producer> findByName(String name) {
-         return PRODUCERS.stream().filter(producer -> producer.getName().equalsIgnoreCase(name)).toList();
+        return PRODUCERS.stream().filter(producer -> producer.getName().equalsIgnoreCase(name)).toList();
     }
 
     public Optional<Producer> findById(Long id) {
