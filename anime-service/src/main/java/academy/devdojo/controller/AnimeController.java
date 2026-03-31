@@ -19,14 +19,14 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class AnimeController {
-    private static final AnimeMapper MAPPER = AnimeMapper.INSTANCE;
+    private final AnimeMapper mapper;
     private final AnimeService service;
 
     @GetMapping()
     public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
         var animes = service.listAll(name);
 
-        var animeGetResponse = MAPPER.toAnimeGetResponseList(animes);
+        var animeGetResponse = mapper.toAnimeGetResponseList(animes);
 
         return ResponseEntity.ok(animeGetResponse);
     }
@@ -35,18 +35,18 @@ public class AnimeController {
     public ResponseEntity<AnimeGetResponse> findById(@PathVariable Long id) {
         var anime = service.findByIdOrThrowAnimeNotFound(id);
 
-        var animeGetResponse = MAPPER.toAnimeGetResponse(anime);
+        var animeGetResponse = mapper.toAnimeGetResponse(anime);
 
         return ResponseEntity.ok(animeGetResponse);
     }
 
     @PostMapping
     public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest postRequest) {
-        var anime = MAPPER.toAnime(postRequest);
+        var anime = mapper.toAnime(postRequest);
 
         var animeSaved = service.save(anime);
 
-        var animePostResponse = MAPPER.toAnimePostResponse(animeSaved);
+        var animePostResponse = mapper.toAnimePostResponse(animeSaved);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(animePostResponse);
     }
@@ -64,7 +64,7 @@ public class AnimeController {
     public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
         log.info("Request to update anime: {}", request);
 
-        var animeToUpdate = MAPPER.toAnime(request);
+        var animeToUpdate = mapper.toAnime(request);
 
         service.update(animeToUpdate);
 
