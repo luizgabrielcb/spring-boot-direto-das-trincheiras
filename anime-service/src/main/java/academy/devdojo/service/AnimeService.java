@@ -15,7 +15,7 @@ public class AnimeService {
     private final AnimeHardCodedRepository repository;
 
     public List<Anime> listAll(String name) {
-        return name == null ? repository.listAll() : repository.findByName(name);
+        return name == null ? repository.findAll() : repository.findByName(name);
     }
 
     public Anime findByIdOrThrowAnimeNotFound(Long id) {
