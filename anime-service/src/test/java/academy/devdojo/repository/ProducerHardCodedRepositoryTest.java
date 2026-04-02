@@ -77,4 +77,52 @@ class ProducerHardCodedRepositoryTest {
 
         Assertions.assertThat(producer).contains(producerExpected);
     }
+
+    @Test
+    @DisplayName("save creates a producer")
+    @Order(5)
+    void save_CreatesProducer_WhenSuccessful() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToSave = Producer.builder().id(99L).name("Mappa").createdAt(LocalDateTime.now()).build();
+        var producerSaved = repository.save(producerToSave);
+
+        Assertions.assertThat(producerSaved).isEqualTo(producerToSave).hasNoNullFieldsOrProperties();
+
+        var producerSavedOptional = repository.findById(producerToSave.getId());
+
+        Assertions.assertThat(producerSavedOptional).isPresent().contains(producerToSave);
+    }
+
+    @Test
+    @DisplayName("delete remove a producer")
+    @Order(6)
+    void delete_RemoveProducer_WhenSuccessful() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToDelete = producerList.getFirst();
+
+        repository.delete(producerToDelete);
+
+        Assertions.assertThat(producerList).doesNotContain(producerToDelete);
+    }
+
+    @Test
+    @DisplayName("update updates a producer")
+    @Order(7)
+    void update_UpdatesProducer_WhenSuccessful() {
+        BDDMockito.when(producerData.getProducers()).thenReturn(producerList);
+
+        var producerToUpdate = this.producerList.getFirst();
+        producerToUpdate.setName("Aniplex");
+
+        repository.update(producerToUpdate);
+
+        Assertions.assertThat(producerList).contains(producerToUpdate);
+
+        var producerUpdatedOptional = repository.findById(producerToUpdate.getId());
+
+        Assertions.assertThat(producerUpdatedOptional).isPresent();
+        Assertions.assertThat(producerUpdatedOptional.get().getName()).isEqualTo(producerToUpdate.getName());
+    }
 }
