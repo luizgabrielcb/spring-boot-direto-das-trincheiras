@@ -158,5 +158,4 @@ class ProducerServiceTest {
                 .isThrownBy(() -> service.update(producerToUpdate))
                 .isInstanceOf(ResponseStatusException.class);
     }
-
 }
