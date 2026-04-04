@@ -2,13 +2,18 @@ package academy.devdojo.controller;
 
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerData;
+import academy.devdojo.repository.ProducerHardCodedRepository;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.*;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -31,6 +36,9 @@ class ProducerControllerTest {
     @MockitoBean
     private ProducerData producerData;
 
+    @MockitoSpyBean
+    private ProducerHardCodedRepository repository;
+
     @Autowired
     private ResourceLoader resourceLoader;
 
@@ -38,9 +46,7 @@ class ProducerControllerTest {
 
     @BeforeEach
     void init() {
-        var dateTime = "2026-04-04T08:39:54.444126";
-        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-        var localDateTime = LocalDateTime.parse(dateTime, formatter);
+        var localDateTime = getLocalDateTime();
 
         var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(localDateTime).build();
         var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(localDateTime).build();
@@ -124,8 +130,36 @@ class ProducerControllerTest {
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
     }
 
+    @Test
+    @DisplayName("POST v1/producers creates a producer")
+    @Order(6)
+    void save_CreatesProducer_WhenSuccessful() throws Exception {
+        var request = readResourceFile("producer/post-request-producer-200.json");
+        var response = readResourceFile("producer/post-response-producer-201.json");
+
+        var producerSaved = Producer.builder().id(99L).name("Aniplex").createdAt(LocalDateTime.now()).build();
+
+        BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(producerSaved);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/v1/producers")
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("x-api-key", "v1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().json(response));
+    }
+
     private String readResourceFile(String fileName) throws IOException {
         var file = resourceLoader.getResource("classpath:%s".formatted(fileName)).getFile();
         return new String(Files.readAllBytes(file.toPath()));
+    }
+
+    private static @NonNull LocalDateTime getLocalDateTime() {
+        var dateTime = "2026-04-04T08:39:54.444126";
+        var formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+        return LocalDateTime.parse(dateTime, formatter);
     }
 }
