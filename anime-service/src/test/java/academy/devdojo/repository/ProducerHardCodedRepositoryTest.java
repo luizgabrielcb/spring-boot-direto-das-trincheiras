@@ -1,5 +1,6 @@
 package academy.devdojo.repository;
 
+import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -18,16 +19,19 @@ import java.util.List;
 class ProducerHardCodedRepositoryTest {
     @InjectMocks
     private ProducerHardCodedRepository repository;
+
+    @InjectMocks
+    private ProducerUtils producerUtils;
+
     @Mock
     private ProducerData producerData;
+
     private final List<Producer> producerList = new ArrayList<>();
+
 
     @BeforeEach
     void init() {
-        var ufotable = Producer.builder().id(1L).name("Ufotable").createdAt(LocalDateTime.now()).build();
-        var witStudio = Producer.builder().id(2L).name("Wit Studio").createdAt(LocalDateTime.now()).build();
-        var studioGhibli = Producer.builder().id(3L).name("Studio Ghibli").createdAt(LocalDateTime.now()).build();
-        producerList.addAll(List.of(ufotable, witStudio, studioGhibli));
+        producerList.addAll(producerUtils.newProducerList());
     }
 
     @Test
