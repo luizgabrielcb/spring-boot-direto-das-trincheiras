@@ -23,7 +23,7 @@ public class AnimeController {
     private final AnimeService service;
 
     @GetMapping()
-    public ResponseEntity<List<AnimeGetResponse>> listAll(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<AnimeGetResponse>> findAll(@RequestParam(required = false) String name) {
         var animes = service.listAll(name);
 
         var animeGetResponse = mapper.toAnimeGetResponseList(animes);

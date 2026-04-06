@@ -110,7 +110,7 @@ class ProducerControllerTest {
 
         var id = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{1}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
@@ -124,7 +124,7 @@ class ProducerControllerTest {
 
         var id = 99L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{1}", id))
+        mockMvc.perform(MockMvcRequestBuilders.get("/v1/producers/{id}", id))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
