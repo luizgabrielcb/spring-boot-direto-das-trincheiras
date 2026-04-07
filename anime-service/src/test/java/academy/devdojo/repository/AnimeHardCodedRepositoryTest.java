@@ -1,5 +1,6 @@
 package academy.devdojo.repository;
 
+import academy.devdojo.commons.AnimeUtils;
 import academy.devdojo.domain.Anime;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -17,18 +18,18 @@ import java.util.List;
 class AnimeHardCodedRepositoryTest {
     @InjectMocks
     private AnimeHardCodedRepository repository;
+
+    @InjectMocks
+    private AnimeUtils animeUtils;
+
     @Mock
     private AnimeData animeData;
+
     private final List<Anime> animeList = new ArrayList<>();
 
     @BeforeEach
     void init() {
-        {
-            var fullMetalAlchemist = Anime.builder().id(1L).name("Full Metal Alchemist").build();
-            var kaguyaSama = Anime.builder().id(2L).name("Kaguya Sama").build();
-            var toniKawa = Anime.builder().id(3L).name("Toni Kawa").build();
-            animeList.addAll(List.of(fullMetalAlchemist, kaguyaSama, toniKawa));
-        }
+        animeList.addAll(animeUtils.newAnimeList());
     }
 
     @Test

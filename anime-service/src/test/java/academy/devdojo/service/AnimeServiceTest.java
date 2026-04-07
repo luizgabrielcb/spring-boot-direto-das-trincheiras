@@ -1,5 +1,6 @@
 package academy.devdojo.service;
 
+import academy.devdojo.commons.AnimeUtils;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.repository.AnimeHardCodedRepository;
 import org.assertj.core.api.Assertions;
@@ -22,6 +23,9 @@ class AnimeServiceTest {
     @InjectMocks
     private AnimeService service;
 
+    @InjectMocks
+    private AnimeUtils animeUtils;
+
     @Mock
     private AnimeHardCodedRepository repository;
 
@@ -29,10 +33,7 @@ class AnimeServiceTest {
 
     @BeforeEach
     void init() {
-        var jujutsuKaisen = Anime.builder().id(1L).name("Jujutsu Kaisen").build();
-        var bokuNoHero = Anime.builder().id(2L).name("Boku no Hero").build();
-        var onePiece = Anime.builder().id(3L).name("One Piece").build();
-        animeList.addAll(List.of(jujutsuKaisen, bokuNoHero, onePiece));
+        animeList.addAll(animeUtils.newAnimeList());
     }
 
     @Test
