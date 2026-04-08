@@ -21,6 +21,6 @@ logging:
     academy.devdojo: DEBUG
 
 database:
-  url: localhost:3306
-  username: devdojo
-  password: devdojo
+  url: ${DB_URL:localhost}:${DB_PORT:3306}
+  username: ${LOCAL_USERNAME:luiz}
+  password: ${LOCAL_PASSWORD:devdojo}
