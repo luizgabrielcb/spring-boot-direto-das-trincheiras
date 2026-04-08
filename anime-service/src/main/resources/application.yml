@@ -19,3 +19,8 @@ logging:
   level:
     root: INFO
     academy.devdojo: DEBUG
+
+database:
+  url: localhost:3306
+  username: devdojo
+  password: devdojo
