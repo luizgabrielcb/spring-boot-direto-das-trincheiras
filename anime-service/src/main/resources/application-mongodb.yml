@@ -1,4 +1,4 @@
 database:
-  url: localhost:9999
-  username: mongo
-  password: mongo
+  url: ${DB_URL:localhost}:${DB_PORT:9999}
+  username: ${LOCAL_USERNAME:mongo}
+  password: ${LOCAL_PASSWORD:mongo}

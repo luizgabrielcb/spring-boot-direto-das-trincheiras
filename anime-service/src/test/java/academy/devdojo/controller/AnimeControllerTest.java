@@ -27,22 +27,16 @@ import java.util.List;
 @ComponentScan("academy.devdojo")
 class AnimeControllerTest {
     private static final String URL = "/v1/animes";
-
     @Autowired
     private MockMvc mockMvc;
-
     @MockitoBean
     private AnimeData animeData;
-
     @MockitoSpyBean
     private AnimeHardCodedRepository repository;
-
     @Autowired
     private AnimeUtils animeUtils;
-
     @Autowired
     private FileUtils fileUtils;
-
     private final List<Anime> animeList = new ArrayList<>();
 
     @BeforeEach

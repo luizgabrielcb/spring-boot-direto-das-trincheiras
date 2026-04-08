@@ -1,14 +1,4 @@
 package academy.devdojo.config;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
-
-@RequiredArgsConstructor
-@ToString
-@Data
-public class Connection {
-    private final String host;
-    private final String username;
-    private final String password;
+public record Connection(String host, String username, String password) {
 }
