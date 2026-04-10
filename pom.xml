@@ -9,6 +9,7 @@
 
 	<modules>
 		<module>anime-service</module>
+		<module>user-service</module>
 	</modules>
 
 </project>
