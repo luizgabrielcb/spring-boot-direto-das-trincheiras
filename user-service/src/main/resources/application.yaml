@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: user-service
+  web:
+    error:
+      include-stacktrace: on_param
+  threads:
+    virtual:
+      enabled: true

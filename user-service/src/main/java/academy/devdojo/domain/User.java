@@ -1,4 +1,4 @@
-package academy.devdojo.user_service.domain;
+package academy.devdojo.domain;
 
 import lombok.Builder;
 import lombok.Data;

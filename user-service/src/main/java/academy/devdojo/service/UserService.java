@@ -1,7 +1,7 @@
-package academy.devdojo.user_service.service;
+package academy.devdojo.service;
 
-import academy.devdojo.user_service.domain.User;
-import academy.devdojo.user_service.repository.UserHardCodedRepository;
+import academy.devdojo.domain.User;
+import academy.devdojo.repository.UserHardCodedRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

@@ -1,10 +1,10 @@
-package academy.devdojo.user_service.mapper;
+package academy.devdojo.mapper;
 
-import academy.devdojo.user_service.domain.User;
-import academy.devdojo.user_service.request.UserPostRequest;
-import academy.devdojo.user_service.request.UserPutRequest;
-import academy.devdojo.user_service.response.UserGetResponse;
-import academy.devdojo.user_service.response.UserPostResponse;
+import academy.devdojo.domain.User;
+import academy.devdojo.request.UserPostRequest;
+import academy.devdojo.request.UserPutRequest;
+import academy.devdojo.response.UserGetResponse;
+import academy.devdojo.response.UserPostResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;

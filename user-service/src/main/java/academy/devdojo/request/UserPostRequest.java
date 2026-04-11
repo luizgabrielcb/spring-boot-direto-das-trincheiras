@@ -1,10 +1,9 @@
-package academy.devdojo.user_service.request;
+package academy.devdojo.request;
 
 import lombok.Data;
 
 @Data
-public class UserPutRequest {
-    private Long id;
+public class UserPostRequest {
     private String firstName;
     private String lastName;
     private String email;

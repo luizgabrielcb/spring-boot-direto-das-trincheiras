@@ -1,11 +1,11 @@
-package academy.devdojo.user_service.controller;
+package academy.devdojo.controller;
 
-import academy.devdojo.user_service.mapper.UserMapper;
-import academy.devdojo.user_service.request.UserPostRequest;
-import academy.devdojo.user_service.request.UserPutRequest;
-import academy.devdojo.user_service.response.UserGetResponse;
-import academy.devdojo.user_service.response.UserPostResponse;
-import academy.devdojo.user_service.service.UserService;
+import academy.devdojo.mapper.UserMapper;
+import academy.devdojo.request.UserPostRequest;
+import academy.devdojo.request.UserPutRequest;
+import academy.devdojo.response.UserGetResponse;
+import academy.devdojo.response.UserPostResponse;
+import academy.devdojo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

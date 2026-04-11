@@ -1,9 +1,9 @@
-package academy.devdojo.user_service.response;
+package academy.devdojo.response;
 
 import lombok.Data;
 
 @Data
-public class UserPostResponse {
+public class UserGetResponse {
     private Long id;
     private String firstName;
     private String lastName;
