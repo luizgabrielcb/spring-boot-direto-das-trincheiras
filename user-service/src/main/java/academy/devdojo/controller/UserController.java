@@ -33,7 +33,7 @@ public class UserController {
 
     @GetMapping("{id}")
     public ResponseEntity<UserGetResponse> findById(@PathVariable Long id) {
-        var user = service.findByIdOrThrowResponseStatusException(id);
+        var user = service.findByIdOrThrowNotFound(id);
 
         var userGetResponse = userMapper.toUserGetResponse(user);
 

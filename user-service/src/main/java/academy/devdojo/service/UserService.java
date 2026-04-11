@@ -18,8 +18,8 @@ public class UserService {
         return firstName == null ? repository.findAll() : repository.findByFirstName(firstName);
     }
 
-    public User findByIdOrThrowResponseStatusException(Long id) {
-        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    public User findByIdOrThrowNotFound(Long id) {
+        return repository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not Found"));
     }
 
     public User save(User userToSave) {
@@ -27,12 +27,12 @@ public class UserService {
     }
 
     public void delete(Long id) {
-        var userToDelete = findByIdOrThrowResponseStatusException(id);
+        var userToDelete = findByIdOrThrowNotFound(id);
         repository.delete(userToDelete);
     }
 
     public void update(User userToUpdate) {
-        findByIdOrThrowResponseStatusException(userToUpdate.getId());
+        findByIdOrThrowNotFound(userToUpdate.getId());
         repository.update(userToUpdate);
     }
 }
