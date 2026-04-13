@@ -6,6 +6,7 @@ import academy.devdojo.request.UserPutRequest;
 import academy.devdojo.response.UserGetResponse;
 import academy.devdojo.response.UserPostResponse;
 import academy.devdojo.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserPostResponse> save(@RequestBody UserPostRequest postRequest) {
+    public ResponseEntity<UserPostResponse> save(@RequestBody @Valid UserPostRequest postRequest) {
         var userToSave = userMapper.toUser(postRequest);
 
         var userSaved = service.save(userToSave);
@@ -51,18 +52,18 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userPostResponse);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
+    @PutMapping
+    public ResponseEntity<Void> update(@RequestBody @Valid UserPutRequest putRequest) {
+        var userToUpdate = userMapper.toUser(putRequest);
+
+        service.update(userToUpdate);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> update(@RequestBody UserPutRequest putRequest) {
-        var userToUpdate = userMapper.toUser(putRequest);
-
-        service.update(userToUpdate);
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
 
         return ResponseEntity.noContent().build();
     }
