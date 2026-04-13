@@ -7,13 +7,13 @@ import lombok.Data;
 
 @Data
 public class UserPutRequest {
-    @NotNull
+    @NotNull(message = "The field 'id' cannot be null")
     private Long id;
     @NotBlank(message = "This field 'firstName' is required")
     private String firstName;
     @NotBlank(message = "This field 'lastName' is required")
     private String lastName;
-    @Email(regexp = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$", message = "e-mail is not valid")
+    @Email(regexp = "^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$", message = "The e-mail is not valid")
     @NotBlank(message = "This field 'email' is required")
     private String email;
 }
