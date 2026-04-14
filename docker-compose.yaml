@@ -1,0 +1,13 @@
+services:
+  mysql:
+    image: mysql:9.6.0
+    environment:
+      MYSQL_ROOT_PASSWORD: devdojo
+      MYSQL_USER: luiz
+      MYSQL_PASSWORD: academy
+    ports:
+      - "3306:3306"
+    volumes:
+      - devdojo-db:/var/lib/mysql
+volumes:
+  devdojo-db:
