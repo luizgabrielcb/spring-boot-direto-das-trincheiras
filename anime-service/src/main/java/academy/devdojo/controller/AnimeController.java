@@ -6,6 +6,7 @@ import academy.devdojo.request.AnimePutRequest;
 import academy.devdojo.response.AnimeGetResponse;
 import academy.devdojo.response.AnimePostResponse;
 import academy.devdojo.service.AnimeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -41,7 +42,7 @@ public class AnimeController {
     }
 
     @PostMapping
-    public ResponseEntity<AnimePostResponse> save(@RequestBody AnimePostRequest postRequest) {
+    public ResponseEntity<AnimePostResponse> save(@RequestBody @Valid AnimePostRequest postRequest) {
         var anime = mapper.toAnime(postRequest);
 
         var animeSaved = service.save(anime);
@@ -51,22 +52,22 @@ public class AnimeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(animePostResponse);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.info("Request to delete anime by id: {}", id);
-
-        service.delete(id);
-
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody AnimePutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid AnimePutRequest request) {
         log.info("Request to update anime: {}", request);
 
         var animeToUpdate = mapper.toAnime(request);
 
         service.update(animeToUpdate);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.info("Request to delete anime by id: {}", id);
+
+        service.delete(id);
 
         return ResponseEntity.noContent().build();
     }

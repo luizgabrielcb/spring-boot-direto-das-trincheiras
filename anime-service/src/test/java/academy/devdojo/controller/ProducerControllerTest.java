@@ -5,7 +5,11 @@ import academy.devdojo.commons.ProducerUtils;
 import academy.devdojo.domain.Producer;
 import academy.devdojo.repository.ProducerData;
 import academy.devdojo.repository.ProducerHardCodedRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 @WebMvcTest(controllers = ProducerController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -207,5 +212,67 @@ class ProducerControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.status().reason("Producer not Found"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("postProducerBadRequestSource")
+    @Order(11)
+    @DisplayName("POST v1/producers returns bad request when fields are invalid")
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        var request = fileUtils.readResourceFile("producer/%s".formatted(fileName));
+
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("x-api-key", "v1"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException).isNotNull();
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException.getMessage()).contains(errors);
+    }
+
+    @ParameterizedTest
+    @MethodSource("putProducerBadRequestSource")
+    @Order(12)
+    @DisplayName("PUT v1/producers returns bad request when fields are invalid")
+    void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileName, List<String> errors) throws Exception {
+        var request = fileUtils.readResourceFile("producer/%s".formatted(fileName));
+
+        var mvcResult = mockMvc.perform(MockMvcRequestBuilders.put(URL)
+                        .content(request)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
+
+        var resolvedException = mvcResult.getResolvedException();
+
+        org.assertj.core.api.Assertions.assertThat(resolvedException).isNotNull();
+
+        Assertions.assertThat(resolvedException.getMessage()).contains(errors);
+    }
+
+    private static Stream<Arguments> postProducerBadRequestSource() {
+        var producerErrors = producerErrors();
+        producerErrors.remove("The field 'id' cannot be null");
+        return Stream.of(Arguments.of("post-producer-request-empty-fields-400.json", producerErrors),
+                Arguments.of("post-producer-request-blank-fields-400.json", producerErrors));
+    }
+
+    private static Stream<Arguments> putProducerBadRequestSource() {
+        return Stream.of(Arguments.of("put-producer-request-blank-fields-400.json", producerErrors()),
+                Arguments.of("put-producer-request-empty-fields-400.json", producerErrors()),
+                Arguments.of("put-producer-request-null-fields-400.json", producerErrors()));
+    }
+
+    private static List<String> producerErrors() {
+        var idNullError = "The field 'id' cannot be null";
+        var nameRequiredError = "The field 'name' is required";
+        return new ArrayList<>(List.of(idNullError, nameRequiredError));
     }
 }

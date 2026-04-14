@@ -6,6 +6,7 @@ import academy.devdojo.request.ProducerPutRequest;
 import academy.devdojo.response.ProducerGetResponse;
 import academy.devdojo.response.ProducerPostResponse;
 import academy.devdojo.service.ProducerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -43,7 +44,7 @@ public class ProducerController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "x-api-key")
-    public ResponseEntity<ProducerPostResponse> save(@RequestBody ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<ProducerPostResponse> save(@RequestBody @Valid ProducerPostRequest producerPostRequest, @RequestHeader HttpHeaders headers) {
         log.info("{}", headers);
 
         var producer = mapper.toProducer(producerPostRequest);
@@ -55,22 +56,22 @@ public class ProducerController {
         return ResponseEntity.status(HttpStatus.CREATED).body(producerPostResponse);
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.info("Request to delete producer by id: {}", id);
-
-        service.delete(id);
-
-        return ResponseEntity.noContent().build();
-    }
-
     @PutMapping
-    public ResponseEntity<Void> update(@RequestBody ProducerPutRequest request) {
+    public ResponseEntity<Void> update(@RequestBody @Valid ProducerPutRequest request) {
         log.debug("Request to update producer: {}", request);
 
         var producerToUpdate = mapper.toProducer(request);
 
         service.update(producerToUpdate);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        log.info("Request to delete producer by id: {}", id);
+
+        service.delete(id);
 
         return ResponseEntity.noContent().build();
     }
