@@ -5,6 +5,7 @@ import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
 import academy.devdojo.repository.UserData;
 import academy.devdojo.repository.UserHardCodedRepository;
+import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,6 +42,9 @@ class UserControllerTest {
     @MockitoBean
     private UserData userData;
 
+    @MockitoBean
+    private UserRepository userRepository;
+
     @MockitoSpyBean
     private UserHardCodedRepository repository;
 
@@ -61,7 +65,7 @@ class UserControllerTest {
     @DisplayName("findAll returns a list with all users")
     @Order(1)
     void findAll_ReturnsListWithAllUsers_WhenSuccessful() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
+        BDDMockito.when(userRepository.findAll()).thenReturn(userList);
 
         var response = fileUtils.readResourceFile("user/get-user-null-first-name-200.json");
 
