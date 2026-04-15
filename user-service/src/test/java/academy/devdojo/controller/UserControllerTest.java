@@ -252,7 +252,6 @@ class UserControllerTest {
         var resolvedException = mvcResult.getResolvedException();
 
         Assertions.assertThat(resolvedException).isNotNull();
-
         Assertions.assertThat(resolvedException.getMessage()).contains(errors);
     }
 
