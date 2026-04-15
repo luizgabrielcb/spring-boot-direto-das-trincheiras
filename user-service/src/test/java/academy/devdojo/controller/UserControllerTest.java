@@ -3,7 +3,6 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
-import academy.devdojo.repository.UserData;
 import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -37,9 +36,6 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @MockitoBean
-    private UserData userData;
 
     @MockitoBean
     private UserRepository repository;
@@ -93,8 +89,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users?name=x returns a empty list when first name is not found")
     @Order(3)
     void findAll_ReturnsEmptyList_WhenNameIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
-
         var response = fileUtils.readResourceFile("user/get-user-x-name-200.json");
 
         var firstName = "x";
@@ -126,8 +120,6 @@ class UserControllerTest {
     @DisplayName("GET v1/users/99 throws NotFound 404 when user is not found")
     @Order(5)
     void findById_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
-
         var response = fileUtils.readResourceFile("user/get-user-by-id-404.json");
 
         var id = 99L;
@@ -182,8 +174,6 @@ class UserControllerTest {
     @DisplayName("PUT v1/users throws NotFound when user is not found")
     @Order(8)
     void update_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
-
         var request = fileUtils.readResourceFile("user/put-request-user-404.json");
         var response = fileUtils.readResourceFile("user/put-user-by-id-404.json");
 
@@ -214,8 +204,6 @@ class UserControllerTest {
     @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
     @Order(10)
     void delete_ThrowsNotFound_WhenUserIsNotFound() throws Exception {
-        BDDMockito.when(userData.getUsers()).thenReturn(userList);
-
         var response = fileUtils.readResourceFile("user/delete-user-by-id-404.json");
 
         mockMvc.perform(MockMvcRequestBuilders.delete(URL + "/{id}", 99L))
