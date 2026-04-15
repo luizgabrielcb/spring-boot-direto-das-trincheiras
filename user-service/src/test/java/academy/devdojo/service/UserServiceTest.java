@@ -2,7 +2,6 @@ package academy.devdojo.service;
 
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
-import academy.devdojo.repository.UserHardCodedRepository;
 import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -28,10 +27,7 @@ class UserServiceTest {
     private UserUtils userUtils;
 
     @Mock
-    private UserHardCodedRepository repository;
-
-    @Mock
-    private UserRepository userRepository;
+    private UserRepository repository;
 
     private final List<User> userList = new ArrayList<>();
 
@@ -44,7 +40,7 @@ class UserServiceTest {
     @DisplayName("findAll returns a list with all users when argument is null")
     @Order(1)
     void findAll_ReturnsListWithAllUsers_WhenArgumentIsNull() {
-        BDDMockito.when(userRepository.findAll()).thenReturn(userList);
+        BDDMockito.when(repository.findAll()).thenReturn(userList);
 
         var users = service.findAll(null);
 
@@ -58,7 +54,7 @@ class UserServiceTest {
         var user = userList.getFirst();
         var expectedUserInList = Collections.singletonList(user);
 
-        BDDMockito.when(repository.findByFirstName(user.getFirstName())).thenReturn(expectedUserInList);
+        BDDMockito.when(repository.findByFirstNameIgnoreCase(user.getFirstName())).thenReturn(expectedUserInList);
 
         var usersFound = service.findAll(user.getFirstName());
 
@@ -71,9 +67,9 @@ class UserServiceTest {
     void findByFirstName_ReturnsEmptyList_WhenFirstNameIsNotFound() {
         var firstName = "not-found";
 
-        BDDMockito.when(repository.findByFirstName(firstName)).thenReturn(Collections.emptyList());
+        BDDMockito.when(repository.findByFirstNameIgnoreCase(firstName)).thenReturn(Collections.emptyList());
 
-        var users = repository.findByFirstName(firstName);
+        var users = repository.findByFirstNameIgnoreCase(firstName);
 
         Assertions.assertThat(users).isNotNull().isEmpty();
     }
@@ -146,7 +142,7 @@ class UserServiceTest {
         userToUpdate.setFirstName("Itachi");
 
         BDDMockito.when(repository.findById(userToUpdate.getId())).thenReturn(Optional.of(userToUpdate));
-        BDDMockito.doNothing().when(repository).update(userToUpdate);
+        BDDMockito.when(repository.save(userToUpdate)).thenReturn(userToUpdate);
 
         Assertions.assertThatNoException().isThrownBy(() -> service.update(userToUpdate));
     }
