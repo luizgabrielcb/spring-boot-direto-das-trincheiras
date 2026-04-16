@@ -16,7 +16,6 @@ public interface UserMapper {
 
     UserGetResponse toUserGetResponse(User user);
 
-    //    @Mapping(target = "id", expression = "java(java.util.concurrent.ThreadLocalRandom.current().nextLong(1, 1000))")
     User toUser(UserPostRequest userPostRequest);
 
     UserPostResponse toUserPostResponse(User user);
