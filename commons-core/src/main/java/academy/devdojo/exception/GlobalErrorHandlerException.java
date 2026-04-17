@@ -27,5 +27,11 @@ public class GlobalErrorHandlerException {
         var error = new DefaultErrorMessage(HttpStatus.BAD_REQUEST.value(), e.getReason());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
+
+    @ExceptionHandler(NameAlreadyExistsException.class)
+    public ResponseEntity<DefaultErrorMessage> handlerNameAlreadyExistsException(NameAlreadyExistsException e) {
+        var error = new DefaultErrorMessage(HttpStatus.BAD_REQUEST.value(), e.getReason());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 }
 

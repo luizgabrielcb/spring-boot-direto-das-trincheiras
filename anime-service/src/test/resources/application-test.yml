@@ -1,4 +1,0 @@
-database:
-  url: ${DB_URL:test}:${DB_PORT:9999}
-  username: ${LOCAL_USERNAME:test}
-  password: ${LOCAL_PASSWORD:test}
