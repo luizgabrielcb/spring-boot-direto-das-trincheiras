@@ -1,0 +1,41 @@
+{
+  "content": [
+    {
+      "id": 1,
+      "name": "Jujutsu Kaisen"
+    },
+    {
+      "id": 2,
+      "name": "Boku no Hero"
+    },
+    {
+      "id": 3,
+      "name": "One Piece"
+    }
+  ],
+  "empty": false,
+  "first": true,
+  "last": true,
+  "number": 0,
+  "numberOfElements": 3,
+  "pageable": {
+    "offset": 0,
+    "pageNumber": 0,
+    "pageSize": 3,
+    "paged": true,
+    "sort": {
+      "empty": true,
+      "sorted": false,
+      "unsorted": true
+    },
+    "unpaged": false
+  },
+  "size": 3,
+  "sort": {
+    "empty": true,
+    "sorted": false,
+    "unsorted": true
+  },
+  "totalElements": 3,
+  "totalPages": 1
+}
