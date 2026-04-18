@@ -35,5 +35,4 @@ class UserRepositoryTest {
 
         Assertions.assertThat(users).isNotEmpty();
     }
-
 }

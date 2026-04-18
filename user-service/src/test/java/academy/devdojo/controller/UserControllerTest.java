@@ -3,6 +3,7 @@ package academy.devdojo.controller;
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
+import academy.devdojo.repository.ProfileRepository;
 import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -38,6 +39,9 @@ class UserControllerTest {
     @MockitoBean
     private UserRepository repository;
 
+    @MockitoBean
+    private ProfileRepository profileRepository;
+
     @Autowired
     private FileUtils fileUtils;
 
@@ -52,7 +56,7 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("findAll returns a list with all users")
+    @DisplayName("GET v1/users returns a list with all users")
     @Order(1)
     void findAll_ReturnsListWithAllUsers_WhenSuccessful() throws Exception {
         BDDMockito.when(repository.findAll()).thenReturn(userList);
