@@ -1,6 +1,7 @@
 package academy.devdojo.controller;
 
-import academy.devdojo.domain.UserProfile;
+import academy.devdojo.mapper.UserProfileMapper;
+import academy.devdojo.response.UserProfileGetResponse;
 import academy.devdojo.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,11 +18,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserProfileController {
     private final UserProfileService service;
+    private final UserProfileMapper mapper;
 
     @GetMapping
-    public ResponseEntity<List<UserProfile>> findAll() {
+    public ResponseEntity<List<UserProfileGetResponse>> findAll() {
         var userProfiles = service.findAll();
 
-        return ResponseEntity.ok(userProfiles);
+        var userProfileGetResponse = mapper.toUserProfileGetResponse(userProfiles);
+
+        return ResponseEntity.ok(userProfileGetResponse);
     }
 }
