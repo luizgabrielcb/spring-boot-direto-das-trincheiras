@@ -12,4 +12,8 @@ public class ProfileUtils {
         var manager = Profile.builder().id(2L).name("Manager").description("Manages users").build();
         return List.of(admin, manager);
     }
+
+    public Profile newProfileSaved() {
+        return Profile.builder().id(99L).name("Admin").description("Administrator").build();
+    }
 }

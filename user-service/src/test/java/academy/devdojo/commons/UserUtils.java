@@ -15,4 +15,12 @@ public class UserUtils {
 
         return List.of(gojo, itadori, naruto, konoha);
     }
+
+    public User newUserToSave() {
+        return User.builder().firstName("Itachi").lastName("Uchiha").email("itachi@folha.com").build();
+    }
+
+    public User newUserSaved() {
+        return User.builder().id(99L).firstName("Itachi").lastName("Uchiha").email("itachi@folha.com").build();
+    }
 }
