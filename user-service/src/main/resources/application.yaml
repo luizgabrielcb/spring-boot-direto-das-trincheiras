@@ -17,5 +17,8 @@ spring:
   threads:
     virtual:
       enabled: true
+logging:
+  level:
+    net.ttddyy.dsproxy.listener: debug
 server:
   port: 8090
