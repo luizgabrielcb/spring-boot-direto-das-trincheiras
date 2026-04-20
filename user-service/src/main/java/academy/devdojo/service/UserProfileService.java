@@ -17,7 +17,7 @@ public class UserProfileService {
         return repository.findAll();
     }
 
-    public List<User> findUserByProfileId(Long profileId) {
-        return repository.findUserByProfileId(profileId);
+    public List<User> findAllUsersByProfileId(Long profileId) {
+        return repository.findAllUsersByProfileId(profileId);
     }
 }

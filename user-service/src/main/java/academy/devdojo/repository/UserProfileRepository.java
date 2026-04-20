@@ -18,5 +18,5 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     List<UserProfile> findAll();
 
     @Query("SELECT up.user FROM UserProfile up WHERE up.profile.id = ?1")
-    List<User> findUserByProfileId(Long profileId);
+    List<User> findAllUsersByProfileId(Long profileId);
 }

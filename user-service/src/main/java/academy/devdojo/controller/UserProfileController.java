@@ -33,7 +33,7 @@ public class UserProfileController {
 
     @GetMapping("profiles/{id}/users")
     public ResponseEntity<List<UserGetUsersResponse>> findAll(@PathVariable Long id) {
-        var users = service.findUserByProfileId(id);
+        var users = service.findAllUsersByProfileId(id);
 
         var userGetUsersResponseList = mapper.toUserGetUsersResponseList(users);
 

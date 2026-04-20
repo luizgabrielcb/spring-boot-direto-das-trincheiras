@@ -33,6 +33,6 @@ class UserRepositoryTest {
     void findAll_ReturnsListWithAllUsers_WhenSuccessful() {
         var users = repository.findAll();
 
-        Assertions.assertThat(users).isNotEmpty();
+        Assertions.assertThat(users).isNotEmpty().hasSize(1);
     }
 }
