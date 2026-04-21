@@ -1,6 +1,7 @@
 package academy.devdojo.controller;
 
 import academy.devdojo.commons.FileUtils;
+import academy.devdojo.config.TestcontainersConfiguration;
 import academy.devdojo.response.ProfileGetResponse;
 import academy.devdojo.response.ProfilePostResponse;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
@@ -12,12 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -29,6 +32,8 @@ import static org.springframework.http.HttpMethod.POST;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureTestRestTemplate
+@Transactional
+@Import(TestcontainersConfiguration.class)
 public class ProfileControllerIT {
     private static final String URL = "/v1/profiles";
 
@@ -40,8 +45,7 @@ public class ProfileControllerIT {
 
     @Test
     @DisplayName("GET v1/profiles returns a list with all profiles")
-    @Sql(value = "/sql/init_two_profiles.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(value = "/sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+    @Sql(value = "/sql/init_two_profiles.sql")
     @Order(1)
     void findAll_ReturnsAllProfiles_WhenSuccessful() {
         var typeReference = new ParameterizedTypeReference<List<ProfileGetResponse>>() {
@@ -74,7 +78,6 @@ public class ProfileControllerIT {
 
     @Test
     @DisplayName("POST v1/profiles returns saved profile when successful")
-    @Sql(value = "/sql/cleanup.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(3)
     void save_ReturnsSavedProfile_WhenSuccessfullySaved() throws Exception {
         var request = fileUtils.readResourceFile("profile/post_request_profile_200.json");
