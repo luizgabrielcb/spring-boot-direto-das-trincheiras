@@ -1,16 +1,14 @@
 package academy.devdojo;
 
-import academy.devdojo.config.TestcontainersConfiguration;
+import academy.devdojo.config.IntegrationTestConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 
 @SpringBootTest
-@Import(TestcontainersConfiguration.class)
-class UserServiceApplicationTests {
+class UserServiceApplicationTests extends IntegrationTestConfig {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

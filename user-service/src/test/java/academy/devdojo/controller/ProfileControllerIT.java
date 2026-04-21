@@ -1,7 +1,7 @@
 package academy.devdojo.controller;
 
 import academy.devdojo.commons.FileUtils;
-import academy.devdojo.config.TestcontainersConfiguration;
+import academy.devdojo.config.IntegrationTestConfig;
 import academy.devdojo.response.ProfileGetResponse;
 import academy.devdojo.response.ProfilePostResponse;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.TestRestTemplate;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -33,8 +32,7 @@ import static org.springframework.http.HttpMethod.POST;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @AutoConfigureTestRestTemplate
 @Transactional
-@Import(TestcontainersConfiguration.class)
-public class ProfileControllerIT {
+public class ProfileControllerIT extends IntegrationTestConfig {
     private static final String URL = "/v1/profiles";
 
     @Autowired
