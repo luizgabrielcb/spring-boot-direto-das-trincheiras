@@ -107,7 +107,7 @@ class ProfileControllerTest {
     void findAll_ReturnsListWithAllProfiles_WhenSuccessful() throws Exception {
         BDDMockito.when(repository.findAll()).thenReturn(profileList);
 
-        var response = fileUtils.readResourceFile("profile/get-request-profile-list-200.json");
+        var response = fileUtils.readResourceFile("profile/get-response-profile-list-200.json");
 
         mockMvc.perform(MockMvcRequestBuilders.get(URL))
                 .andDo(MockMvcResultHandlers.print())

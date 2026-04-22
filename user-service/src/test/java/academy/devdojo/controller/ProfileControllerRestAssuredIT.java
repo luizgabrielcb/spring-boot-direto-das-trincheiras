@@ -4,6 +4,7 @@ import academy.devdojo.commons.FileUtils;
 import academy.devdojo.config.IntegrationTestConfig;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class ProfileControllerRestAssuredIT extends IntegrationTestConfig {
     @Sql(value = "/sql/clean_profiles.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(1)
     void findAll_ReturnsAllProfiles_WhenSuccessful() {
-        var response = fileUtils.readResourceFile("profile/get-request-profile-list-200.json");
+        var response = fileUtils.readResourceFile("profile/get-response-profile-list-200.json");
 
         RestAssured.given()
                 .contentType(ContentType.JSON).accept(ContentType.JSON)
@@ -49,34 +50,48 @@ public class ProfileControllerRestAssuredIT extends IntegrationTestConfig {
                 .log().all();
     }
 
-//    @Test
-//    @DisplayName("GET v1/profiles returns a empty list when profile is not found")
-//    @Order(2)
-//    void findAll_ReturnsEmptyList_WhenProfileIsNotFound() {
-//        var typeReference = new ParameterizedTypeReference<List<ProfileGetResponse>>() {
-//        };
-//
-//        var responseEntity = testRestTemplate.exchange(URL, GET, null, typeReference);
-//
-//        assertThat(responseEntity).isNotNull();
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-//        assertThat(responseEntity.getBody()).isNotNull().isEmpty();
-//    }
-//
-//    @Test
-//    @DisplayName("POST v1/profiles returns saved profile when successful")
-//    @Order(3)
-//    void save_ReturnsSavedProfile_WhenSuccessfullySaved() throws Exception {
-//        var request = fileUtils.readResourceFile("profile/post_request_profile_200.json");
-//
-//        var profileRequestEntity = builHttpEntity(request);
-//
-//        var responseEntity = testRestTemplate.exchange(URL, POST, profileRequestEntity, ProfilePostResponse.class);
-//
-//        assertThat(responseEntity).isNotNull();
-//        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-//        assertThat(responseEntity.getBody()).isNotNull().hasNoNullFieldsOrProperties();
-//    }
+    @Test
+    @DisplayName("GET v1/profiles returns a empty list when profile is not found")
+    @Order(2)
+    void findAll_ReturnsEmptyList_WhenProfileIsNotFound() {
+        var response = fileUtils.readResourceFile("profile/get-response-profile-empty-list-200.json");
+
+        RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .when()
+                .get(URL)
+                .then()
+                .statusCode(HttpStatus.OK.value())
+                .body(Matchers.equalTo(response))
+                .log().all();
+    }
+
+    @Test
+    @DisplayName("POST v1/profiles returns saved profile when successful")
+    @Order(3)
+    void save_ReturnsSavedProfile_WhenSuccessfullySaved() {
+        var request = fileUtils.readResourceFile("profile/post_request_profile_200.json");
+        var expectedResponse = fileUtils.readResourceFile("profile/post_response_profile_201.json");
+
+        var response = RestAssured.given()
+                .contentType(ContentType.JSON).accept(ContentType.JSON)
+                .body(request)
+                .when()
+                .post(URL)
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .log().all()
+                .extract().body().asString();
+
+        JsonAssertions.assertThatJson(response)
+                .node("id")
+                .asNumber()
+                .isPositive();
+
+        JsonAssertions.assertThatJson(response)
+                .whenIgnoringPaths("id")
+                .isEqualTo(expectedResponse);
+    }
 //
 //    @ParameterizedTest
 //    @MethodSource("postProfileBadRequestSource")
@@ -94,17 +109,6 @@ public class ProfileControllerRestAssuredIT extends IntegrationTestConfig {
 //        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 //
 //        JsonAssertions.assertThatJson(responseEntity.getBody()).whenIgnoringPaths("timestamp").isEqualTo(expectedResponse);
-//    }
-//
-//    private static Stream<Arguments> postProfileBadRequestSource() {
-//        return Stream.of(Arguments.of("post-request-profile-empty-fields-400.json", "post-response-profile-empty-fields-400.json"),
-//                Arguments.of("post-request-profile-blank-fields-400.json", "post-response-profile-blank-fields-400.json"));
-//    }
-//
-//    private HttpEntity<String> builHttpEntity(String request) {
-//        var headers = new HttpHeaders();
-//        headers.setContentType(MediaType.APPLICATION_JSON);
-//        return new HttpEntity<>(request, headers);
 //    }
 }
 
