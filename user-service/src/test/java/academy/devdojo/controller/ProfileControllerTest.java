@@ -67,7 +67,7 @@ class ProfileControllerTest {
         BDDMockito.when(repository.save(ArgumentMatchers.any())).thenReturn(profileToSave);
 
         var request = fileUtils.readResourceFile("profile/post_request_profile_200.json");
-        var response = fileUtils.readResourceFile("profile/post_request_profile_201.json");
+        var response = fileUtils.readResourceFile("profile/post_response_profile_201.json");
 
         mockMvc.perform(MockMvcRequestBuilders
                 .post(URL)
