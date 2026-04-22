@@ -60,9 +60,9 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("GET v1/users returns a list with all users")
+    @DisplayName("GET v1/users returns a list with all users when argument is null")
     @Order(1)
-    void findAll_ReturnsListWithAllUsers_WhenSuccessful() throws Exception {
+    void findAll_ReturnsListWithAllUsers_WhenArgumentIsNull() throws Exception {
         BDDMockito.when(repository.findAll()).thenReturn(userList);
 
         var response = fileUtils.readResourceFile("user/get-user-null-first-name-200.json");

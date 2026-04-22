@@ -5,6 +5,7 @@ import academy.devdojo.config.IntegrationTestConfig;
 import academy.devdojo.response.ProfileGetResponse;
 import academy.devdojo.response.ProfilePostResponse;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
+import net.javacrumbs.jsonunit.core.Option;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -76,7 +77,7 @@ public class ProfileControllerIT extends IntegrationTestConfig {
     @Test
     @DisplayName("POST v1/profiles returns saved profile when successful")
     @Order(3)
-    void save_ReturnsSavedProfile_WhenSuccessfullySaved() throws Exception {
+    void save_ReturnsSavedProfile_WhenSuccessfullySaved() {
         var request = fileUtils.readResourceFile("profile/post_request_profile_200.json");
 
         var profileRequestEntity = builHttpEntity(request);
@@ -92,7 +93,7 @@ public class ProfileControllerIT extends IntegrationTestConfig {
     @MethodSource("postProfileBadRequestSource")
     @DisplayName("POST v1/profiles returns bad request when fields are empty or blank and if id is null")
     @Order(4)
-    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileRequest, String fileResponse) throws Exception {
+    void save_ReturnsBadRequest_WhenFieldsAreInvalid(String fileRequest, String fileResponse) {
         var request = fileUtils.readResourceFile("profile/%s".formatted(fileRequest));
         var expectedResponse = fileUtils.readResourceFile("profile/%s".formatted(fileResponse));
 
@@ -103,7 +104,10 @@ public class ProfileControllerIT extends IntegrationTestConfig {
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
-        JsonAssertions.assertThatJson(responseEntity.getBody()).whenIgnoringPaths("timestamp").isEqualTo(expectedResponse);
+        JsonAssertions.assertThatJson(responseEntity.getBody())
+                .whenIgnoringPaths("timestamp")
+                .when(Option.IGNORING_ARRAY_ORDER)
+                .isEqualTo(expectedResponse);
     }
 
     private static Stream<Arguments> postProfileBadRequestSource() {
