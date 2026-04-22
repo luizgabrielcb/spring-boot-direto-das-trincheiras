@@ -3,9 +3,11 @@ package academy.devdojo.service;
 import academy.devdojo.domain.User;
 import academy.devdojo.exception.EmailAlreadyExistsException;
 import academy.devdojo.exception.NotFoundException;
+import academy.devdojo.repository.UserProfileRepository;
 import academy.devdojo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository repository;
+    private final UserProfileRepository userProfileRepository;
 
     public List<User> findAll(String firstName) {
         return firstName == null ? repository.findAll() : repository.findByFirstNameIgnoreCase(firstName);
@@ -22,14 +25,15 @@ public class UserService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("User not Found"));
     }
 
-    //    @Transactional(rollbackFor = Exception.class)
     public User save(User userToSave) {
         assertEmailDoesNotExist(userToSave.getEmail());
         return repository.save(userToSave);
     }
 
+    @Transactional
     public void delete(Long id) {
         var userToDelete = findByIdOrThrowNotFound(id);
+        userProfileRepository.deleteByUserId(userToDelete.getId());
         repository.delete(userToDelete);
     }
 

@@ -19,4 +19,6 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
 
     @Query("SELECT up.user FROM UserProfile up WHERE up.profile.id = ?1")
     List<User> findAllUsersByProfileId(Long profileId);
+
+    void deleteByUserId(Long userId);
 }
