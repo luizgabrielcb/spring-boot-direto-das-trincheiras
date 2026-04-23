@@ -24,7 +24,7 @@ public class GlobalErrorHandlerAdvice {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<DefaultErrorMessage> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException e) {
+    public ResponseEntity<DefaultErrorMessage> handleSQLIntegrityConstraintViolationException() {
         var error = new DefaultErrorMessage(HttpStatus.BAD_REQUEST.value(), "Duplicated entry for one of the unique fields");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
