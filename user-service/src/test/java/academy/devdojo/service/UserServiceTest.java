@@ -3,6 +3,7 @@ package academy.devdojo.service;
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.domain.User;
 import academy.devdojo.exception.EmailAlreadyExistsException;
+import academy.devdojo.repository.UserProfileRepository;
 import academy.devdojo.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -29,6 +30,9 @@ class UserServiceTest {
 
     @Mock
     private UserRepository repository;
+
+    @Mock
+    private UserProfileRepository userProfileRepository;
 
     private final List<User> userList = new ArrayList<>();
 
@@ -120,7 +124,9 @@ class UserServiceTest {
     @Order(7)
     void delete_RemovesUser_WhenSuccessful() {
         var userToDelete = userList.getFirst();
+
         BDDMockito.when(repository.findById(userToDelete.getId())).thenReturn(Optional.of(userToDelete));
+        BDDMockito.doNothing().when(userProfileRepository).deleteByUserId(userToDelete.getId());
         BDDMockito.doNothing().when(repository).delete(userToDelete);
 
         Assertions.assertThatNoException().isThrownBy(() -> service.delete(userToDelete.getId()));

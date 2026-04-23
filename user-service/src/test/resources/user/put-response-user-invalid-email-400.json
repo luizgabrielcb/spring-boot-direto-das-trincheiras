@@ -1,1 +1,7 @@
-{"timestamp":"2026-04-22T18:45:31.908Z","status":400,"error":"Bad Request","message":"Validation failed for object='userPutRequest'. Error count: 1","errors":[{"objectName":"userPutRequest","field":"email","rejectedValue":"itachikonoha.com","codes":["Email.userPutRequest.email","Email.email","Email.java.lang.String","Email"],"arguments":[{"arguments":null,"code":"email","codes":["userPutRequest.email","email"],"defaultMessage":"email"},[],{"arguments":null,"codes":["^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$"],"defaultMessage":"^[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$"}],"bindingFailure":false,"code":"Email","defaultMessage":"The e-mail is not valid"}],"path":"/v1/users"}
+{
+  "error": "Bad Request",
+  "message": "The e-mail is not valid",
+  "path": "/v1/users",
+  "status": 400,
+  "timestamp": "2026-04-23T14:18:28.80535-03:00"
+}
