@@ -12,7 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 @DataJpaTest
 @Import(UserUtils.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class UserProfileRepositoryTest extends IntegrationTestConfig {
+class UserProfileRepositoryIT extends IntegrationTestConfig {
     @Autowired
     private UserProfileRepository repository;
 
