@@ -23,6 +23,7 @@ spring:
       enabled: true
 logging:
   level:
-    net.ttddyy.dsproxy.listener: debug
+    org.springframework.security: debug
+#    net.ttddyy.dsproxy.listener: debug
 server:
   port: 8090
