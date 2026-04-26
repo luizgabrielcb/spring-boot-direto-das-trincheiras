@@ -17,4 +17,6 @@ public class UserPostRequest {
     @NotBlank(message = "This field 'email' is required")
     @Schema(description = "User's email", example = "gojo.satoru@jujutsu.com")
     private String email;
+    @NotBlank(message = "This field 'password' is required")
+    private String password;
 }
