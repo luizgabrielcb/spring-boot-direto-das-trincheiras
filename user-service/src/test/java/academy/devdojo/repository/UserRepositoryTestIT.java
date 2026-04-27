@@ -2,7 +2,6 @@ package academy.devdojo.repository;
 
 import academy.devdojo.commons.UserUtils;
 import academy.devdojo.config.IntegrationTestConfig;
-import academy.devdojo.domain.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,14 @@ class UserRepositoryTestIT extends IntegrationTestConfig {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private UserUtils userUtils;
+
     @Test
     @DisplayName("save creates an user")
     @Order(1)
     void save_CreatesUser_WhenSuccessful() {
-        var userToSave = User.builder().firstName("Naruto").lastName("Uzumaki").email("narutin@hokage.folha.br").build();
+        var userToSave = userUtils.newUserToSave();
         var savedUser = repository.save(userToSave);
 
         Assertions.assertThat(savedUser).isEqualTo(userToSave).hasNoNullFieldsOrProperties();

@@ -3,36 +3,48 @@ package academy.devdojo.controller;
 
 import academy.devdojo.commons.FileUtils;
 import academy.devdojo.config.IntegrationTestConfig;
+import academy.devdojo.config.RestAssuredConfig;
+import academy.devdojo.exception.NotFoundException;
 import academy.devdojo.repository.UserRepository;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.specification.RequestSpecification;
 import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 import net.javacrumbs.jsonunit.core.Option;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.stream.Stream;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = RestAssuredConfig.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     private static final String URL = "/v1/users";
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    @Qualifier(value = "requestSpecificationRegularUser")
+    private RequestSpecification requestSpecificationRegularUser;
+
+    @Autowired
+    @Qualifier(value = "requestSpecificationAdminUser")
+    private RequestSpecification requestSpecificationAdminUser;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void setup() {
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = port;
+        RestAssured.requestSpecification = requestSpecificationRegularUser;
     }
 
     @Autowired
@@ -47,6 +59,8 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(1)
     void findAll_ReturnsListWithAllUsers_WhenArgumentIsNull() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var responseExpected = fileUtils.readResourceFile("user/get-user-null-first-name-test_IT_200.json");
 
         var response = RestAssured.given()
@@ -74,6 +88,8 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(2)
     void findAll_ReturnsFoundUserInList_WhenNameIsFound() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var responseExpected = fileUtils.readResourceFile("user/get-producer-satoro-first-name-200.json");
 
         var response = RestAssured.given()
@@ -97,6 +113,8 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(3)
     void findAll_ReturnsEmptyList_WhenNameIsNotFound() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var response = fileUtils.readResourceFile("user/get-user-x-name-200.json");
 
         RestAssured.given()
@@ -116,6 +134,8 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(4)
     void findById_ReturnsUserById_WhenSuccessful() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var responseExpected = fileUtils.readResourceFile("user/get-user-by-id-object-200.json");
 
         var user = repository.findByFirstNameIgnoreCase("Satoro");
@@ -137,8 +157,12 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
 
     @Test
     @DisplayName("GET v1/users/99 throws NotFound 404 when user is not found")
+    @Sql(value = "/sql/init_two_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(5)
     void findById_ThrowsNotFound_WhenUserIsNotFound() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var responseExpected = fileUtils.readResourceFile("user/get-user-by-id-404.json");
 
         RestAssured.given()
@@ -177,14 +201,18 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
 
     @Test
     @DisplayName("PUT v1/users updates an user")
-    @Sql(value = "/sql/init_two_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/init_one_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(7)
     void update_UpdatesUser_WhenSuccessful() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var request = fileUtils.readResourceFile("user/put-request-user-200.json");
 
         var user = repository.findByFirstNameIgnoreCase("Satoro");
         request = request.replace("1", user.getFirst().getId().toString());
+
+        var oldUser = user.getFirst();
 
         RestAssured.given()
                 .contentType(ContentType.JSON).accept(ContentType.JSON)
@@ -194,12 +222,19 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
                 .then()
                 .statusCode(HttpStatus.NO_CONTENT.value())
                 .log().all();
+
+        var updatedUser = repository.findById(oldUser.getId()).orElseThrow(() -> new NotFoundException("user not found"));
+        Assertions.assertThat(passwordEncoder.matches("sukuna", updatedUser.getPassword())).isTrue();
     }
 
     @Test
     @DisplayName("PUT v1/users throws NotFound when user is not found")
+    @Sql(value = "/sql/init_one_user.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(8)
     void update_ThrowsNotFound_WhenUserIsNotFound() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var request = fileUtils.readResourceFile("user/put-request-user-404.json");
         var responseExpected = fileUtils.readResourceFile("user/put-user-by-id-404.json");
 
@@ -220,6 +255,8 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(9)
     void delete_RemoveUser_WhenSuccessful() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var userToDelete = repository.findByFirstNameIgnoreCase("Satoro");
 
         RestAssured.given()
@@ -234,8 +271,12 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
 
     @Test
     @DisplayName("DELETE v1/users/99 throws NotFound when user is not found")
+    @Sql(value = "/sql/init_two_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(10)
     void delete_ThrowsNotFound_WhenUserIsNotFound() {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var response = fileUtils.readResourceFile("user/delete-user-by-id-404.json");
 
         RestAssured.given()
@@ -276,8 +317,12 @@ public class UserControllerRestAssuredIT extends IntegrationTestConfig {
     @ParameterizedTest
     @MethodSource("putUserBadRequestSource")
     @DisplayName("PUT v1/users returns bad request when fields are empty or blank and if email is invalid ")
+    @Sql(value = "/sql/init_two_users.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(value = "/sql/clean_users.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     @Order(12)
     void update_ReturnsBadRequest_WhenFieldsAreInvalid(String fileRequest, String fileResponse) {
+        RestAssured.requestSpecification = requestSpecificationAdminUser;
+
         var request = fileUtils.readResourceFile("user/%s".formatted(fileRequest));
         var responseExpected = fileUtils.readResourceFile("user/%s".formatted(fileResponse));
 

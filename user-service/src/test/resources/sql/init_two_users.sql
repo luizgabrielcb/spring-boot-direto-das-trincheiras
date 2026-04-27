@@ -1,2 +1,2 @@
-insert into user (email,first_name,last_name) values ('satoru@jujutsu.com','Satoro','Gojo');
-insert into user (email,first_name,last_name) values ('son.goku@dbz.com','Goku','Son');
+insert into user (email,first_name,last_name,roles,password) values ('satoru@jujutsu.com','Satoro','Gojo','ADMIN','{bcrypt}$2a$10$aTnFCSeFhSdlHonVvpGn8Oq/ku.//.VGLm8cTwO7ZxjOxFi03pqjO');
+insert into user (email,first_name,last_name,roles,password) values ('son.goku@dbz.com','Goku','Son','USER','{bcrypt}$2a$10$aTnFCSeFhSdlHonVvpGn8Oq/ku.//.VGLm8cTwO7ZxjOxFi03pqjO');
