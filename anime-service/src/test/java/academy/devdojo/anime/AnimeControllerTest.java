@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -31,7 +32,8 @@ import java.util.stream.Stream;
 
 @WebMvcTest(controllers = AnimeController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ComponentScan(basePackages = {"academy.devdojo.anime", "academy.devdojo.commons"})
+@ComponentScan(basePackages = {"academy.devdojo.anime", "academy.devdojo.commons", "academy.devdojo.config"})
+@WithMockUser
 class AnimeControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -55,6 +57,16 @@ class AnimeControllerTest {
     }
 
     @Test
+    @DisplayName("GET v1/animes returns 403 when role is not USER")
+    @Order(1)
+    @WithMockUser(roles = "ADMIN")
+    void findAll_Returns403_WhenRoleIsNotUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(URL))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isForbidden());
+    }
+
+    @Test
     @DisplayName("GET v1/animes returns a list with all animes when name is null")
     @Order(1)
     void findAll_ReturnsFindWithAllAnimes_WhenNameIsNull() throws Exception {
@@ -67,6 +79,7 @@ class AnimeControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));
     }
+
 
     @Test
     @DisplayName("GET v1/animes returns a paginated list of animes")
