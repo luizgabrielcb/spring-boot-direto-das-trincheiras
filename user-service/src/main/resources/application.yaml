@@ -27,3 +27,7 @@ logging:
 #    net.ttddyy.dsproxy.listener: debug
 server:
   port: 8090
+
+brasil-api:
+  base-url: ${BRASIL_API_BASE_URL:https://brasilapi.com.br/api}
+  cep-uri: ${BRASIL_API_CEP_URI:/cep/v1/{cep}}
