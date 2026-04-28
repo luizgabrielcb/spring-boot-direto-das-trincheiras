@@ -208,6 +208,7 @@ paths:
       tags:
         - anime-controller
       operationId: findAllAnimesPaginated
+      x-spring-paginated: true
       parameters:
         - name: page
           in: query
@@ -262,9 +263,11 @@ components:
       properties:
         id:
           type: integer
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotNull(message = \"The field 'id' cannot be null\")"
           format: int64
         name:
           type: string
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"The field 'name' is required\")"
           minLength: 1
       required:
         - id
@@ -506,6 +509,7 @@ components:
       properties:
         name:
           type: string
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"The field 'name' is required\")"
           minLength: 1
       required:
         - name

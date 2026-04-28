@@ -1,11 +1,12 @@
 package academy.devdojo.anime;
 
+import academy.devdojo.api.AnimeControllerApi;
+import academy.devdojo.dto.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @SecurityRequirement(name = "basicAuth")
-public class AnimeController {
+public class AnimeController implements AnimeControllerApi {
     private final AnimeMapper mapper;
     private final AnimeService service;
 
@@ -32,8 +33,10 @@ public class AnimeController {
     }
 
     @GetMapping("/paginated")
-    public ResponseEntity<Page<AnimeGetResponse>> findAllAnimesPaginated(@ParameterObject Pageable pageable) {
-        var pageAnimeGetResponse = service.findAllPaginated(pageable).map(mapper::toAnimeGetResponse);
+    public ResponseEntity<PageAnimeGetResponse> findAllAnimesPaginated(@ParameterObject Pageable pageable) {
+        var jpaPageAnimeGetResponse = service.findAllPaginated(pageable);
+
+        var pageAnimeGetResponse = mapper.toPageAnimeGetResponse(jpaPageAnimeGetResponse);
 
         return ResponseEntity.ok(pageAnimeGetResponse);
     }
