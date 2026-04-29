@@ -11,25 +11,28 @@ spring:
   threads:
     virtual:
       enabled: true
+  flyway:
+    enabled: true
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 server:
   servlet:
     context-path: /
+
   tomcat:
     threads:
       max: 20
-
 logging:
+
   level:
     root: INFO
     academy.devdojo: DEBUG
-
 management:
   server:
     port: 8989
+
   endpoints:
     web:
       exposure:
