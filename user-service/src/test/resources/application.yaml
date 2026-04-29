@@ -11,3 +11,7 @@ spring:
     error:
       include-binding-errors: always
       include-message: always
+
+brasil-api:
+  base-url: https://localhost:8787/api
+  cep-uri: /cep/v1/{cep}
