@@ -3,6 +3,8 @@ spring:
   #    user:
   #      name: user
   #      password: devdojo
+  flyway:
+    enabled: true
   config:
     import: optional:classpath:.env[.properties]
   application:
@@ -14,7 +16,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
   web:
     error:
       include-stacktrace: on_param

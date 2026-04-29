@@ -13,7 +13,8 @@ public class TestcontainersConfiguration {
     private static final MySQLContainer MY_SQL_CONTAINER;
 
     static {
-        MY_SQL_CONTAINER = new MySQLContainer(DockerImageName.parse("mysql:9.6.0"));
+        MY_SQL_CONTAINER = new MySQLContainer(DockerImageName.parse("mysql:9.6.0"))
+                .withDatabaseName("user_service");
         MY_SQL_CONTAINER.start();
     }
 
