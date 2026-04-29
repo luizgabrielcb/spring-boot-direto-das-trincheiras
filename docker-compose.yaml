@@ -1,7 +1,7 @@
-x-database-variables: &database-variables
-  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/anime_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
-  ENV_ROOT_USER: root
-  ENV_ROOT_PASSWORD: devdojo
+#x-database-variables: &database-variables
+#  SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/anime_service?useTimezone=true&serverTimezone=UTC&createDatabaseIfNotExist=true
+#  ENV_ROOT_USER: root
+#  ENV_ROOT_PASSWORD: devdojo
 
 services:
   mysql:
@@ -16,29 +16,29 @@ services:
     volumes:
       - devdojo-db:/var/lib/mysql
 
-  anime-service:
-    image: luizgabrielcb/anime-service:0.0.2-SNAPSHOT
-    container_name: anime-service
-    ports:
-      - "8080:8080"
-      - "8989:8989"
-    environment:
-      <<: *database-variables
-
-  prometheus:
-    image: prom/prometheus:v3.0.0
-    container_name: prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-
-  grafana:
-    image: grafana/grafana:11.3.0
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+#  anime-service:
+#    image: luizgabrielcb/anime-service:0.0.2-SNAPSHOT
+#    container_name: anime-service
+#    ports:
+#      - "8080:8080"
+#      - "8989:8989"
+#    environment:
+#      <<: *database-variables
+#
+#  prometheus:
+#    image: prom/prometheus:v3.0.0
+#    container_name: prometheus
+#    ports:
+#      - "9090:9090"
+#    volumes:
+#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#
+#  grafana:
+#    image: grafana/grafana:11.3.0
+#    container_name: grafana
+#    ports:
+#      - "3000:3000"
+#    volumes:
+#      - ./grafana/datasources:/etc/grafana/provisioning/datasources
 volumes:
   devdojo-db:
