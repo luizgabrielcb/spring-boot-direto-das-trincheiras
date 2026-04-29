@@ -92,7 +92,7 @@ class AnimeControllerTest {
 
         var response = fileUtils.readResourceFile("anime/get-anime-paginated-200.json");
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URL+"/paginated"))
+        mockMvc.perform(MockMvcRequestBuilders.get(URL + "/paginated"))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().json(response));

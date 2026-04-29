@@ -158,7 +158,7 @@ class ProducerServiceTest {
                 .isThrownBy(() -> service.update(producerToUpdate))
                 .isInstanceOf(ResponseStatusException.class);
     }
-    
+
     @Test
     @DisplayName("save throws NameAlreadyExistsException when name already exists")
     @Order(11)

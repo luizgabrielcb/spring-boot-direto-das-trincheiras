@@ -1,1 +1,14 @@
-[{"id":1,"name":"Jujutsu Kaisen"},{"id":2,"name":"Boku no Hero"},{"id":3,"name":"One Piece"}]
+[
+  {
+    "id": 1,
+    "name": "Jujutsu Kaisen"
+  },
+  {
+    "id": 2,
+    "name": "Boku no Hero"
+  },
+  {
+    "id": 3,
+    "name": "One Piece"
+  }
+]

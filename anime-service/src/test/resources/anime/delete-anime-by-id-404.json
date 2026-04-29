@@ -1,1 +1,4 @@
-{"status":404,"message":"Anime not Found"}
+{
+  "status": 404,
+  "message": "Anime not Found"
+}
